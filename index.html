@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/x-icon" href="imgs/icons8-google-16.png">
+    <link rel="stylesheet" href="./style.css">
+    <!--
+    <style>
+        body {
+            background-image: url('google.png'); /* Set the background of the whole HTML */
+            background-size: cover; /* Ensure the background covers the entire page */
+            background-position: center; /* Center the background image */
+            margin: 0; /* Remove default margin to ensure full coverage */
+            height: 100vh; /* Ensure the body takes up the full viewport height */
+            font-family: 'Roboto', Arial, sans-serif; /* Set default font for the entire document */
+            position: relative; /* Allow absolute positioning of the credentials button */
+        }
+        #gameContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        canvas {
+            background: #eee; /* Revert canvas background to a solid color */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Add box shadow with blur */
+        }
+        #controls {
+            margin-top: 10px;
+        }
+        /* Pill button styles */
+        .pill-button {
+            margin: auto;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none; /* Remove default button border */
+            font-family: 'Roboto', Arial, sans-serif; /* Ensure buttons use the same font */
+            cursor: pointer; /* Add pointer cursor for better UX */
+        }
+        .pill-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.5);
+        }
+        /* Style for Start and Stop buttons to match previous size */
+        #controls .pill-button {
+            padding: 15px 30px; /* Maintain larger size for Start and Stop buttons */
+            font-size: 18px; /* Maintain larger font size for Start and Stop buttons */
+        }
+        /* Specific button colors */
+        #startButton {
+            background-color: #06A35E; /* Green for Start */
+        }
+        #stopButton {
+            background-color: #D6432F; /* Red for Stop */
+        }
+        #credentialsButton {
+            background-color: #FFB70A; /* Yellow-orange for Credentials */
+            color: black; /* Better contrast with yellow background */
+        }
+        /* Credentials button positioning */
+        #credentialsButton {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        -->
+    </style>
+    <!-- Import Roboto font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Import SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="myCanvas" width="480" height="320"></canvas>
+        <div id="controls">
+            <button id="startButton" class="pill-button">Start</button>
+            <button id="stopButton" class="pill-button">Stop</button>
+        </div>
+    </div>
+    <!-- Add Credentials button in the bottom right -->
+    <button id="credentialsButton" class="pill-button">Credentials</button>
+
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var ballRadius = 10;
+        var paddleHeight = 10;
+        var paddleWidth = 75;
+        var brickRowCount = 3;
+        var brickColumnCount = 5;
+        var brickWidth = 75;
+        var brickHeight = 20;
+        var brickPadding = 10;
+        var brickOffsetTop = 30;
+        var brickOffsetLeft = 30;
+        var ballImage = new Image();
+        ballImage.src = "imgs/icons8-google-16.png";
+
+        var x, y, dx, dy, paddleX, rightPressed, leftPressed, score, bricks, isGameRunning;
+
+        // Wait for the ball image to load before starting the game
+        ballImage.onload = function() {
+            initGame();
+            draw();
+        };
+        ballImage.onerror = function() {
+            console.error("Failed to load ball image. Using fallback.");
+            initGame();
+            draw();
+        };
+
+        function initGame() {
+            x = canvas.width / 2;
+            y = canvas.height - 30;
+            dx = 3; // Increased ball speed from 0.5 to 0.7
+            dy = -3; // Increased ball speed from 0.5 to 0.7
+            paddleX = (canvas.width - paddleWidth) / 2;
+            rightPressed = false;
+            leftPressed = false;
+            score = 0;
+            bricks = [];
+            for (var c = 0; c < brickColumnCount; c++) {
+                bricks[c] = [];
+                for (var r = 0; r < brickRowCount; r++) {
+                    bricks[c][r] = { x: 0, y: 0, status: 1, color: getRandomColor() };
+                }
+            }
+            isGameRunning = false;
+        }
+
+        function getRandomColor() {
+            const colors = ["#FFB70A", "#1D71EE", "#D6432F", "#06A35E"];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        document.addEventListener("keydown", keyDownHandler, false);
+        document.addEventListener("keyup", keyUpHandler, false);
+
+        document.getElementById("startButton").addEventListener("click", function() {
+            if (!isGameRunning) {
+                isGameRunning = true;
+                draw();
+            }
+        });
+
+        document.getElementById("stopButton").addEventListener("click", function() {
+            isGameRunning = false;
+        });
+
+        document.getElementById("credentialsButton").addEventListener("click", function() {
+            Swal.fire({
+                title: 'Credentials',
+                text: 'Made by Luka Dragan',
+                icon: 'info',
+                confirmButtonText: 'Exit',
+                confirmButtonColor: '#FFB70A' // Matches the button color
+            });
+        });
+
+        function keyDownHandler(e) {
+            if (e.key === "Right" || e.key === "ArrowRight") {
+                rightPressed = true;
+            } else if (e.key === "Left" || e.key === "ArrowLeft") {
+                leftPressed = true;
+            }
+        }
+
+        function keyUpHandler(e) {
+            if (e.key === "Right" || e.key === "ArrowRight") {
+                rightPressed = false;
+            } else if (e.key === "Left" || e.key === "ArrowLeft") {
+                leftPressed = false;
+            }
+        }
+
+        function drawBall() {
+            if (ballImage.complete && ballImage.naturalWidth !== 0) {
+                ctx.drawImage(ballImage, x - ballRadius, y - ballRadius, ballRadius * 2, ballRadius * 2);
+            } else {
+                // Fallback if image fails to load
+                ctx.beginPath();
+                ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        function drawPaddle() {
+            ctx.beginPath();
+            ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+            ctx.fillStyle = "#808080"; // Paddle color set to grey (as per previous request)
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawBricks() {
+            for (var c = 0; c < brickColumnCount; c++) {
+                for (var r = 0; r < brickRowCount; r++) {
+                    if (bricks[c][r].status === 1) {
+                        var brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+                        var brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+                        bricks[c][r].x = brickX;
+                        bricks[c][r].y = brickY;
+                        ctx.beginPath();
+                        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                        ctx.fillStyle = bricks[c][r].color;
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+                }
+            }
+        }
+
+        function collisionDetection() {
+            for (var c = 0; c < brickColumnCount; c++) {
+                for (var r = 0; r < brickRowCount; r++) {
+                    var b = bricks[c][r];
+                    if (b.status === 1) {
+                        if (x + ballRadius > b.x && x - ballRadius < b.x + brickWidth &&
+                            y + ballRadius > b.y && y - ballRadius < b.y + brickHeight) {
+                            // More precise brick collision
+                            if (x < b.x || x > b.x + brickWidth) {
+                                dx = -dx; // Side collision
+                            } else {
+                                dy = -dy; // Top/bottom collision
+                            }
+                            b.status = 0;
+                            score++;
+                            if (score === brickRowCount * brickColumnCount) {
+                                alert("YOU WIN, CONGRATULATIONS!");
+                                resetGame();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function drawScore() {
+            ctx.font = "16px 'Roboto', Arial, sans-serif"; // Update font for the score text
+            ctx.fillStyle = "#0095DD";
+            ctx.fillText("Score: " + score, 8, 20);
+        }
+
+        function paddleCollision() {
+            if (y + dy + ballRadius > canvas.height - paddleHeight && dy > 0) {
+                if (x > paddleX && x < paddleX + paddleWidth) {
+                    // Calculate where the ball hits the paddle (0 to 1)
+                    let hitPosition = (x - paddleX) / paddleWidth;
+                    // Convert to -1 to 1 range
+                    let normalizedHit = (hitPosition - 0.5) * 2;
+                    // Adjust ball direction based on hit position
+                    dx = 1.4 * normalizedHit; // Adjusted max horizontal speed to 1.4 to match initial speed of 0.7
+                    dy = -Math.abs(dy); // Ensure upward movement
+                    // Speed remains constant as per previous request
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBricks();
+            drawBall();
+            drawPaddle();
+            drawScore();
+
+            if (isGameRunning) {
+                collisionDetection();
+
+                x += dx;
+                y += dy;
+
+                // Wall collisions
+                if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+                    dx = -dx;
+                }
+                if (y + dy < ballRadius) {
+                    dy = -dy;
+                }
+
+                // Paddle collision and game over check
+                if (!paddleCollision()) {
+                    if (y + dy > canvas.height + ballRadius) {
+                        alert("GAME OVER");
+                        resetGame();
+                    }
+                }
+
+                if (rightPressed && paddleX < canvas.width - paddleWidth) {
+                    paddleX += 4; // Increased paddle speed from 3 to 4
+                } else if (leftPressed && paddleX > 0) {
+                    paddleX -= 4; // Increased paddle speed from 3 to 4
+                }
+
+                requestAnimationFrame(draw);
+            }
+        }
+
+        function resetGame() {
+            initGame();
+            draw();
+        }
+
+        // Initial game setup is now handled by the ballImage.onload event
+    </script>
+</body>
+</html>
