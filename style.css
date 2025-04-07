@@ -1,0 +1,78 @@
+body {
+    background-image: url('imgs/google.png'); /* Set the background of the whole HTML */
+    background-size: cover; /* Ensure the background covers the entire page */
+    background-position: center; /* Center the background image */
+    margin: 0; /* Remove default margin to ensure full coverage */
+    height: 100vh; /* Ensure the body takes up the full viewport height */
+    font-family: 'Roboto', Arial, sans-serif; /* Set default font for the entire document */
+    position: relative; /* Allow absolute positioning of the credentials button */
+}
+#gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+canvas {
+    background: #eee; /* Revert canvas background to a solid color */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Add box shadow with blur */
+}
+#controls {
+    margin-top: 10px;
+}
+/* Pill button styles */
+.pill-button {
+    margin: auto;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none; /* Remove default button border */
+    font-family: 'Roboto', Arial, sans-serif; /* Ensure buttons use the same font */
+    cursor: pointer; /* Add pointer cursor for better UX */
+}
+.pill-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.5);
+}
+/* Style for Start and Stop buttons to match previous size */
+#controls .pill-button {
+    padding: 15px 30px; /* Maintain larger size for Start and Stop buttons */
+    font-size: 18px; /* Maintain larger font size for Start and Stop buttons */
+}
+/* Specific button colors */
+#startButton {
+    background-color: #06A35E; /* Green for Start */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+#stopButton {
+    background-color: #D6432F; /* Red for Stop */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+#credentialsButton {
+    background-color: #FFB70A; /* Yellow-orange for Credentials */
+     /* Better contrast with yellow background */
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+/* Credentials button positioning */
+#credentialsButton {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+#gameTitle {
+    text-align: center;
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 35px;
+    font-weight: 700;
+    color: #39373788;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
