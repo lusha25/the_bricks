@@ -1,0 +1,91 @@
+body {
+    background-image: url('imgs/google.png'); 
+    background-size: cover; 
+    background-position: center; 
+    margin: 0; 
+    height: 100vh;
+    font-family: 'Roboto', Arial, sans-serif; 
+    position: relative; 
+}
+
+#gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center contents vertically */
+    min-height: calc(100vh - 120px); /* Adjust for title height */
+    box-sizing: border-box;
+}
+
+canvas {
+    background: #eee;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); 
+}
+
+#controls {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 40px; /* Increased gap between Start and Stop buttons */
+}
+
+.circle-button {
+    display: inline-block;
+    width: 80px; 
+    height: 80px; 
+    border-radius: 50%;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none; 
+    font-family: 'Roboto', Arial, sans-serif; 
+    cursor: pointer; 
+    line-height: 80px; 
+    font-size: 18px; 
+}
+
+.circle-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.5);
+}
+
+#startButton {
+    background-color: #06A35E;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+#stopButton {
+    background-color: #D6432F;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#credentialsButton {
+    background-color: #FFB70A;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+#controlsButton {
+    background-color: #1D71EE; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+#gameTitle {
+    text-align: center;
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 100px;
+    font-weight: 700;
+    position: absolute; /* Position at the top */
+    top: 0; /* Align to the top */
+    width: 100%; /* Full width for centering */
+    margin: 5px 0 0 0; /* Minimal margin */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
