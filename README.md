@@ -25,7 +25,7 @@ This project is a web-based brick-breaking game.
 - Use the left and right arrow keys to move the paddle.
 - Bounce the ball with the paddle to break all the bricks.
 - If the ball falls below the paddle, the game ends with a "GAME OVER" alert.
-- Break all 28 bricks to win and see a "YOU WIN, CONGRATULATIONS!" message.
+- Break all 54 bricks to win and see a "YOU WIN, CONGRATULATIONS!" message.
 - Click "Stop" to pause the game at any time.
 - Use the "Credentials" button to view author information.
 - Use the "Controls" button to view the controls information.
