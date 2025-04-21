@@ -1,13 +1,13 @@
 The Bricks 
 
-![image](https://github.com/user-attachments/assets/0eacc362-e991-45b3-b9d9-d3b72425f100)
+![image](https://github.com/user-attachments/assets/468055f3-f1a6-4b74-b7fd-20463b40af25)
 
 # The Google Bricks
 
 This project is a web-based brick-breaking game.
 
 ## Features
-- 4x7 grid of colorful bricks to break
+- 6x9 grid of colorful bricks to break
 - Paddle controlled by arrow keys
 - Custom Google logo ball with fallback option
 - Start and Stop buttons for game control
